@@ -15,6 +15,9 @@ public class RegistrationPage {
 	private final By errorMessage = By.cssSelector(".error_message");
 	private final By confirmationMessage = By.cssSelector(".confirmation_message");
 
+	private final By emailCell = By.xpath("//tr[td[contains(text(), 'Email')]]/td[2]");
+	private final By passwordCell = By.xpath("//tr[td[contains(text(), 'Password')]]/td[2]");
+
 	private final By registerBtn = By.cssSelector("[value='Register']");
 
 	public RegistrationPage (WebDriver driver) {
@@ -46,5 +49,15 @@ public class RegistrationPage {
 	public String getConfirmationMessage() {
 		wait.until(ExpectedConditions.visibilityOfElementLocated(confirmationMessage));
 		return driver.findElement(confirmationMessage).getText();
+	}
+
+	public String getRegisterEmail() {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(emailCell));
+		return driver.findElement(emailCell).getText().trim();
+	}
+
+	public String getRegisterPassword() {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(passwordCell));
+		return driver.findElement(passwordCell).getText().trim();
 	}
 }

@@ -4,14 +4,17 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import pages.LoginPage;
 import pages.RegistrationPage;
 
 public class RegisterTest extends BaseTest {
 	RegistrationPage registrationPage;
+	LoginPage loginPage;
 
 	@BeforeMethod(dependsOnMethods = "setUp")
 	public void initPage() {
 		registrationPage = new RegistrationPage(driver);
+		loginPage = new LoginPage(driver);
 	}
 
 	@Test 
@@ -25,6 +28,28 @@ public class RegisterTest extends BaseTest {
 			.sendDataToField(By.name("password2"), "12345")
 			.clickRegister();
 		Assert.assertEquals(registrationPage.getConfirmationMessage(), "Account is created!");
+	}
+	
+	@Test 
+	public void registrationThenLoginSucceeds() {
+		String uniqueEmail = "user" + System.currentTimeMillis() + "@test.com";
+		registrationPage.open()
+			.sendDataToField(By.name("first_name"), "Dmytro")
+			.sendDataToField(By.name("last_name"), "Testov")
+			.sendDataToField(By.name("email"), uniqueEmail)
+			.sendDataToField(By.name("password1"), "12345")
+			.sendDataToField(By.name("password2"), "12345")
+			.clickRegister();
+		Assert.assertEquals(registrationPage.getConfirmationMessage(), "Account is created!");
+
+		String email = registrationPage.getRegisterEmail();
+		String password = registrationPage.getRegisterPassword();
+
+		System.out.println(email);
+		System.out.println(password);
+
+		loginPage.open().login(email, password);
+		Assert.assertTrue(loginPage.isLoggedIn(), "Ожидали успешный вход, но страница не показала приветствие");
 	}
 
 	@Test 
