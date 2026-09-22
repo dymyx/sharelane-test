@@ -39,11 +39,15 @@ public class ShopingCartTest extends BaseTest {
 		loginPage.open().login(email, password);
 		Assert.assertTrue(loginPage.isLoggedIn(), "Не удалось войти перед оформлением заказа");
 
+		shopingCartPage.createCard();
+
+		String cardNumber= shopingCartPage.getCardNumber();
+
 		shopingCartPage.addBook()
 			.open()
 			.updateCart()
 			.checkout()
-			.addCardNumber()
+			.addCardNumber(cardNumber)
 			.payment();
 
 			Assert.assertFalse(shopingCartPage.getOrderMessage().isEmpty(), "Сообщение об оформлении заказа не отображается");
