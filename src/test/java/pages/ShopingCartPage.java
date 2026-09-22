@@ -23,9 +23,11 @@ public class ShopingCartPage {
 
 	private final By orderId = By.xpath("//td/p[contains(text(), 'Order id:')]/b");
 
+	private final By fieldCarNumber = By.xpath("//td[contains(text(), 'Visa')]/following-sibling::td[1]/span/b");
+
 	public ShopingCartPage(WebDriver driver) {
 		this.driver = driver;
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 	}
 
 	public ShopingCartPage open() {
@@ -45,13 +47,25 @@ public class ShopingCartPage {
 	}
 
 	public ShopingCartPage checkout() {
-		wait.until(ExpectedConditions.elementToBeClickable(checkoutBtn)).click();
+    wait.until(ExpectedConditions.elementToBeClickable(checkoutBtn)).click();
+    wait.until(ExpectedConditions.urlContains("checkout.py"));
+    return this;
+}
+
+
+	public ShopingCartPage createCard() {
+		driver.get("https://www.sharelane.com/cgi-bin/get_credit_card.py?type=1");
 		return this;
 	}
 
-	public ShopingCartPage addCardNumber() {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(cardNumberField)).clear();
-		driver.findElement(cardNumberField).sendKeys("1111111111119461");
+	public String getCardNumber() {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(fieldCarNumber));
+		return driver.findElement(fieldCarNumber).getText().trim();
+	}
+
+	public ShopingCartPage addCardNumber(String cardNumber) {
+		wait.until(ExpectedConditions.visibilityOfElementLocated(cardNumberField)).clear();
+		driver.findElement(cardNumberField).sendKeys(cardNumber);
 		return this;
 	}
 
